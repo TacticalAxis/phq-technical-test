@@ -1,0 +1,35 @@
+name: Deploy to App Engine
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        project_id: phq-ghost-name-picker
+
+    - name: Deploy to App Engine
+      id: deploy
+      uses: google-github-actions/deploy-appengine@v2
+      with:
+        deliverables: app.yaml
+        project_id: phq-ghost-name-picker
+        promote: true
+
+    - name: Test deployed app
+      run: curl "${{ steps.deploy.outputs.version_url }}"
