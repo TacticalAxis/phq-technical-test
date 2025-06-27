@@ -8,7 +8,7 @@ app = securescaffold.create_app(__name__)
 @app.route("/")
 def root():
     return render_template(
-        "index.html", some_injected_value="piv_test", authenticated=False
+        "pages/index.html", some_injected_value="piv_test", authenticated=False
     )
 
 
@@ -19,8 +19,3 @@ def favicon():
         "favicon.ico",
         mimetype="image/vnd.microsoft.icon",
     )
-
-
-if __name__ == "__main__":
-    # This is used when running locally only.
-    app.run(host="127.0.0.1", port=8080, debug=True)
