@@ -22,6 +22,7 @@ CSP_POLICY = {
     "default-src": "'none'",
     "script-src": "",
     "style-src": "",
-    "style-src-elem": ""
+    "style-src-elem": "",
+    "img-src": "'self'"
 }
 CSP_POLICY_NONCE_IN = ["script-src", "style-src", "style-src-elem"]
