@@ -1,0 +1,32 @@
+blinker==1.9.0
+cachetools==5.5.2
+certifi==2025.6.15
+charset-normalizer==3.4.2
+click==8.2.1
+Flask==3.1.1
+Flask-SeaSurf @ https://github.com/maxcountryman/flask-seasurf/archive/f383b482c69e0b0e8064a8eb89305cea3826a7b6.zip#sha256=88f9437f7711a8d8bd6a4259a5ff34ba7e6627248f60ff7fea4b7f4a07afb87a
+flask-talisman==1.1.0
+google-api-core==2.25.1
+google-auth==2.40.3
+google-cloud-core==2.4.3
+google-cloud-datastore==2.21.0
+google-cloud-ndb==2.3.4
+googleapis-common-protos==1.70.0
+grpcio==1.73.1
+grpcio-status==1.73.1
+idna==3.10
+itsdangerous==2.2.0
+Jinja2==3.1.6
+MarkupSafe==3.0.2
+proto-plus==1.26.1
+protobuf==6.31.1
+pyasn1==0.6.1
+pyasn1_modules==0.4.2
+pymemcache==4.0.0
+pytz==2025.2
+redis==6.2.0
+requests==2.32.4
+rsa==4.9.1
+Secure-Scaffold @ https://github.com/google/gae-secure-scaffold-python3/archive/master.zip#sha256=0e377058a90bae408dd7aa7aba52b83ae39bd0776efa1dedb1a210e2d6891674
+urllib3==2.5.0
+Werkzeug==3.1.3
