@@ -3,6 +3,8 @@
 
 <head>
   <title>Basic Website Test</title>
+  <script src="{{ url_for('static', filename='script.js') }}" nonce="{{ csp_nonce() }}"></script>
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" nonce="{{ csp_nonce() }}">
 </head>
 
 <body>
