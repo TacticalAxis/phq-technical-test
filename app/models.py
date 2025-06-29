@@ -11,6 +11,6 @@ class GhostUser(ndb.Model):
     Args:
         ndb (_type_): extends the ndb Model
     """
-    user_id = ndb.StringProperty()
     ghost_name = ndb.StringProperty()
+    email = ndb.StringProperty()
     created_at = ndb.DateTimeProperty(auto_now_add=True)
