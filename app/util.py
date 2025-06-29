@@ -2,6 +2,10 @@ import os
 from dotenv import load_dotenv
 from flask.sessions import SessionMixin
 from google.cloud import secretmanager
+from typing import List
+import csv
+
+from app.models import PhantomData
 
 def load_environment_variables():
     """Loads the environment variables from file.
@@ -61,3 +65,14 @@ def get_session_user(session: SessionMixin) -> dict:
     """
     user = session.get("user") if session else None
     return user if isinstance(user, dict) else {}
+
+def load_ghost_names() -> List[PhantomData]:
+    data:List[PhantomData] = []
+    with open("./data/ghost_names.csv", 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            ghost_name = row['Ghost name']
+            ghost_description = row['Description']
+            data.append(PhantomData(ghost_name=ghost_name, ghost_description=ghost_description))
+    return data
+    
