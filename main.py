@@ -47,10 +47,14 @@ def root():
 def picker():
     if session_active(session=session):
         user = get_session_user(session=session)
-        return render_template(
-            "pages/picker.html",
-            random_names=random.sample(GHOST_NAMES, 3)
-        )
+        with ndb_client.context():
+            ghost_user:GhostUser = GhostUser.get_by_id(user.get('sub')) # type: ignore
+            return render_template(
+                "pages/picker.html",
+                first_name=ghost_user.first_name,
+                last_name=ghost_user.last_name,
+                random_names=random.sample(GHOST_NAMES, 3)
+            )
     else:
         return redirect(url_for('root'))
 
