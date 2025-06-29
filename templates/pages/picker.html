@@ -16,7 +16,7 @@
 
             <div class="btn-group flex-wrap" role="group" aria-label="Basic example">
               {% for name in random_names %}
-                <div class="card mb-3" style="width: 18rem;">
+                <div class="card mb-3">
                   <div class="card-body">
                     <h5 class="card-title">{{ name.ghost_name }}</h5>
                     <p class="card-text">{{ name.ghost_description }}</p>
@@ -44,14 +44,15 @@
               <div class="card-body">-</div>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            <button type="button" class="btn btn-primary mt-3" id="submitBtn">Submit</button>
           </form>
         {% endif %}
       </main>
 
       {% include "components/footer.html" %}
     </div>
-
+    
     {% include "components/scripts.html" %}
+    <script src="{{ url_for('static', filename='js/picker.js') }}" nonce="{{ csp_nonce() }}"></script>
   </body>
 </html>

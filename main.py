@@ -2,7 +2,7 @@
 import os
 import securescaffold
 
-from flask import render_template, send_from_directory, session, redirect, url_for, request, flash
+from flask import render_template, send_from_directory, session, redirect, url_for, request
 from authlib.integrations.flask_client import OAuth
 from google.cloud import ndb
 from app.auth import create_auth_blueprint, register_google_oauth
@@ -59,12 +59,8 @@ def picker():
 def submit_name():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
-    ghost_name = request.form.get('ghost_name', '')
-    
-    print(first_name, ghost_name, last_name)
-    
+    ghost_name = request.form.get('ghost_name')
     return redirect(url_for('root'))
-
 
 @app.route("/favicon.ico")
 def favicon():
