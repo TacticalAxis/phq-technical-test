@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100" data-bs-theme="auto">
+  {% include "components/header.html" %}
+
+  <body class="d-flex h-100 text-center text-bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      {% include "components/navbar.html" %}
+
+      <!-- Main Section -->
+      <main class="px-3">
+        <h1>Ghost Name Picker</h1>
+
+        {% if random_names %}
+          <form id="ghostNameForm" method="POST" action="{{ url_for('submit_name') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+
+            <div class="btn-group flex-wrap" role="group" aria-label="Basic example">
+              {% for name in random_names %}
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ name.ghost_name }}</h5>
+                    <p class="card-text">{{ name.ghost_description }}</p>
+                    <button type="button" class="btn btn-secondary" id="name-{{ loop.index }}" data-ghost-name="{{ name.ghost_name }}">
+                      {{ name.ghost_name }}
+                    </button>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <hr />
+
+            <div class="mb-3">
+              <input type="text" class="form-control" id="firstNameInput" name="first_name" placeholder="First Name">
+            </div>
+
+            <div class="mb-3">
+              <input type="text" class="form-control" id="lastNameInput" name="last_name" placeholder="Last Name">
+            </div>
+
+            <input type="hidden" id="ghostNameInput" name="ghost_name" value="">
+
+            <div class="card" id="display">
+              <div class="card-body">-</div>
+            </div>
+
+            <button type="button" class="btn btn-primary mt-3" id="submitBtn">Submit</button>
+          </form>
+        {% endif %}
+      </main>
+
+      {% include "components/footer.html" %}
+    </div>
+    
+    {% include "components/scripts.html" %}
+    <script src="{{ url_for('static', filename='js/picker.js') }}" nonce="{{ csp_nonce() }}"></script>
+  </body>
+</html>

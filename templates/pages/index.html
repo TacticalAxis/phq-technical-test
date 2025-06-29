@@ -1,25 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" class="h-100" data-bs-theme="auto">
+  {% include "components/header.html" %}
 
-{% include "components/header.html" %}
+  <body class="d-flex h-100 text-center text-bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      {% include "components/navbar.html" %}
 
-<body class="d-flex h-100 text-center text-bg-dark">
-  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    {% include "components/navbar.html" %}
-    <!-- Main Section -->
-    <main class="px-3">
-      <h1>Basic Test Website Example</h1>
-      {% if user %}
-       <p class="lead">Hello, {{ user.email }}</p>
-       <a href="{{ url_for('auth.logout') }}">Logout!</a>
-      {% else %}
-        <p class="lead">Hello, Guest</p>
-        <a href="{{ url_for('auth.login') }}">Login!</a>
-      {% endif %}
-    </main>
-    {% include "components/footer.html" %}
-  </div>
-  {% include "components/scripts.html" %}
-</body>
+      <!-- Main Section -->
+      <main class="px-3">
+        <h1>Ghost Name Picker</h1>
 
+        {% if ghost_users %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Ghost Name</th>
+                <th scope="col">Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ghost in ghost_users %}
+                <tr>
+                  <th scope="row">{{ ghost.ghost_name }}</th>
+                  <th scope="row">{{ ghost.email }}</th>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+
+        {% if user %}
+          <p class="lead">Hello, {{ user.given_name }}</p>
+
+          {% if not ghost_user.ghost_name %}
+            <a href="{{ url_for('picker') }}" class="btn btn-primary">Get a Phantom name</a>
+          {% else %}
+            <a href="{{ url_for('picker') }}" class="btn btn-primary">Change your current Phantom name</a>
+          {% endif %}
+        {% else %}
+          <p class="lead">Hello, Guest</p>
+          <a href="{{ url_for('auth.login') }}">Login!</a>
+        {% endif %}
+      </main>
+
+      {% include "components/footer.html" %}
+    </div>
+
+    {% include "components/scripts.html" %}
+  </body>
 </html>
