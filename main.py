@@ -23,7 +23,9 @@ ndb_client = ndb.Client()
 auth_bp = create_auth_blueprint(google_oauth, ndb_client)
 app.register_blueprint(auth_bp)
 
+# load ghost names (from csv)
 GHOST_NAMES = load_ghost_names()
+
 
 @app.route("/")
 def root():
@@ -31,10 +33,14 @@ def root():
         user = get_session_user(session=session)
         ghost_users = []
         with ndb_client.context():
+            # get the current ghost and the other ghosts (this could be more efficient)
             ghost_user = GhostUser.get_by_id(user.get('sub'))
             ghost_users = GhostUser.query().filter(GhostUser.ghost_name != None).fetch() # type: ignore
             return render_template(
-                "pages/index.html", user=user, ghost_users=ghost_users, ghost_user=ghost_user
+                "pages/index.html", 
+                user=user, 
+                ghost_users=ghost_users, 
+                ghost_user=ghost_user
             )
     else:
         return render_template(
@@ -47,6 +53,7 @@ def picker():
     if session_active(session=session):
         user = get_session_user(session=session)
         with ndb_client.context():
+            # get the current ghost and the other ghosts (this could be more efficient)
             ghost_user:GhostUser = GhostUser.get_by_id(user.get('sub')) # type: ignore
             ghost_users = GhostUser.query().filter(GhostUser.ghost_name != None).fetch() # type: ignore
             taken_names = [g.ghost_name for g in ghost_users]
@@ -68,7 +75,8 @@ def submit_name():
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         ghost_name = request.form.get('ghost_name')
-    
+        
+        # set the new attributes to the db model & commit
         with ndb_client.context():
             ghost_user:GhostUser = GhostUser.get_by_id(user.get('sub')) # type: ignore
             ghost_user.first_name = first_name

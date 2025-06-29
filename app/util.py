@@ -69,24 +69,34 @@ def get_session_user(session: SessionMixin) -> dict:
 
 
 def load_ghost_names() -> List[PhantomData]:
+    """Loads the ghost names from a csv file.
+    The path should probably be an environment variable.
+
+    Returns:
+        List[PhantomData]: Returns a list of PhantomData dataclass-constructed objects.
+    """
     data:List[PhantomData] = []
     with open("./data/ghost_names.csv", 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            # parse out the name and description
             ghost_name = row['Ghost name']
             ghost_description = row['Description']
-            data.append(PhantomData(ghost_name=ghost_name, ghost_description=ghost_description))
+            
+            data.append(PhantomData(
+                ghost_name = ghost_name,
+                ghost_description = ghost_description
+            ))
     return data
 
 
 def pick_random_string(list_of_strings: list[str], exclusions: list[str], count: int = 3):
-    # Remove excluded items from the list
-    print("LOS", list_of_strings)
+    # remove excluded items from the list
     filtered_list = [s for s in list_of_strings if s not in exclusions]
-    print("fs", list_of_strings)
     
+    # return the list if there isn't enough strings
     if len(filtered_list) < count:
-        raise ValueError("Not enough items to sample after exclusions.")
+        return filtered_list
     
-    # Pick random strings from the filtered list
+    # pick random strings from the filtered list
     return random.sample(filtered_list, count)

@@ -22,5 +22,8 @@ class GhostUser(ndb.Model):
 
 @dataclass
 class PhantomData:
+    """A dataclass that contains the ghost_name and ghost_description.
+    This should probably be in a different file.
+    """
     ghost_name: str
     ghost_description: str
