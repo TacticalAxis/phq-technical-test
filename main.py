@@ -57,10 +57,21 @@ def picker():
 
 @app.route('/submit', methods=['POST'])
 def submit_name():
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-    ghost_name = request.form.get('ghost_name')
+    if session_active(session=session):
+        user = get_session_user(session=session)
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        ghost_name = request.form.get('ghost_name')
+    
+        with ndb_client.context():
+            ghost_user:GhostUser = GhostUser.get_by_id(user.get('sub')) # type: ignore
+            ghost_user.first_name = first_name
+            ghost_user.last_name = last_name
+            ghost_user.ghost_name = ghost_name
+            ghost_user.put()
+                
     return redirect(url_for('root'))
+
 
 @app.route("/favicon.ico")
 def favicon():
