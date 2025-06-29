@@ -9,11 +9,12 @@
     <!-- Main Section -->
     <main class="px-3">
       <h1>Basic Test Website Example</h1>
-      <p class="lead">Last {{ some_injected_value }}</p>
-      {% if authenticated %}
-        {% include "components/authenticated.html" %}
+      {% if user %}
+       <p class="lead">Hello, {{ user.email }}</p>
+       <a href="{{ url_for('auth.logout') }}">Logout!</a>
       {% else %}
-        {% include "components/unauthenticated.html" %}
+        <p class="lead">Hello, Guest</p>
+        <a href="{{ url_for('auth.login') }}">Login!</a>
       {% endif %}
     </main>
     {% include "components/footer.html" %}

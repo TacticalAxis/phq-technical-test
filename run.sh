@@ -17,6 +17,7 @@ export PYTHONDONTWRITEBYTECODE=1
 
 # Start your local development server.
 export FLASK_SETTINGS_FILENAME="settings.py"
+export GCP_PROJECT_ID="phq-ghost-name-picker"
 FLASK_ENV="$FLASK_ENV" FLASK_APP="$FLASK_APP" flask run
 
 # Clean up the datastore emulator.

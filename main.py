@@ -1,17 +1,30 @@
 # main.py
 import os
 import securescaffold
-from flask import render_template, send_from_directory
-from securescaffold.contrib.appengine import users
 
+from flask import render_template, send_from_directory, session
+from authlib.integrations.flask_client import OAuth
+from google.cloud import secretmanager
+from auth import create_auth_blueprint, register_google_oauth
+
+# flask app setup
 app = securescaffold.create_app(__name__)
+
+# init oauth
+oauth = OAuth(app)
+
+google_oauth = register_google_oauth(oauth)
+
+# create auth blueprint from factory
+auth_bp = create_auth_blueprint(google_oauth)
+app.register_blueprint(auth_bp)
 
 @app.route("/")
 def root():
+    user = session.get("user")
     return render_template(
-        "pages/index.html", some_injected_value="piv_test", authenticated=False
+        "pages/index.html", user=user
     )
-
 
 @app.route("/favicon.ico")
 def favicon():
@@ -20,16 +33,3 @@ def favicon():
         "favicon.ico",
         mimetype="image/vnd.microsoft.icon",
     )
-
-
-@app.route("/test")
-def testauth():
-    user = users.get_current_user()
-
-    if user:
-        email = user.email()
-        user_id = user.user_id()
-
-        return f"Hello signed-in user {email} {user_id}"
-    
-    return "Not signed-in"
