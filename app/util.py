@@ -1,11 +1,13 @@
 import os
 from dotenv import load_dotenv
+from flask.sessions import SessionMixin
 from google.cloud import secretmanager
 
 def load_environment_variables():
     """Loads the environment variables from file.
     """
     load_dotenv()
+
 
 def get_secret_value(secret_id: str, version_id: str = "latest") -> str:
     """Returns a secret value stored in either the envvars or secrets manager.
@@ -32,3 +34,30 @@ def get_secret_value(secret_id: str, version_id: str = "latest") -> str:
     secret_payload = response.payload.data.decode("UTF-8")
     
     return secret_payload
+
+
+def session_active(session: SessionMixin) -> bool:
+    """
+    Check if the session is active.
+
+    Args:
+        session (SessionMixin): The Flask session object.
+
+    Returns:
+        bool: Returns true if the session exists.
+    """
+    return session.get("user") != None
+
+
+def get_session_user(session: SessionMixin) -> dict:
+    """
+    Retrieve the user dict from the session.
+
+    Args:
+        session (SessionMixin): The Flask session object.
+
+    Returns:
+        dict: The user dict from the session, or an empty dict if not found or invalid.
+    """
+    user = session.get("user") if session else None
+    return user if isinstance(user, dict) else {}

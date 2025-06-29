@@ -6,6 +6,8 @@ from flask import render_template, send_from_directory, session
 from authlib.integrations.flask_client import OAuth
 from google.cloud import ndb
 from app.auth import create_auth_blueprint, register_google_oauth
+from app.models import GhostUser
+from app.util import get_session_user, session_active
 
 # flask app setup
 app = securescaffold.create_app(__name__)
@@ -18,15 +20,24 @@ google_oauth = register_google_oauth(oauth)
 ndb_client = ndb.Client()
 
 # create auth blueprint from factory
-auth_bp = create_auth_blueprint(google_oauth)
+auth_bp = create_auth_blueprint(google_oauth, ndb_client)
 app.register_blueprint(auth_bp)
 
 @app.route("/")
 def root():
-    user = session.get("user")
-    return render_template(
-        "pages/index.html", user=user
-    )
+    if session_active(session=session):
+        user = get_session_user(session=session)
+        ghost_users = []
+        with ndb_client.context():
+            ghost_user = GhostUser.get_by_id(user.get('sub'))
+            ghost_users = GhostUser.query().filter(GhostUser.ghost_name != None).fetch() # type: ignore
+            return render_template(
+                "pages/index.html", user=user, ghost_users=ghost_users, ghost_user=ghost_user
+            )
+    else:
+        return render_template(
+            "pages/index.html", user=None
+        )
 
 @app.route("/favicon.ico")
 def favicon():
