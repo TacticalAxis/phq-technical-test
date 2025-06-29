@@ -1,3 +1,4 @@
 https://github.com/google/gae-secure-scaffold-python3/archive/1.1.0.zip
 python-dotenv
 google-cloud-secret-manager
+authlib
