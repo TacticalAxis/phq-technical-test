@@ -17,13 +17,9 @@
             <div class="btn-group flex-wrap" role="group" aria-label="Basic example">
               {% for name in random_names %}
                 <div class="card mb-3">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ name.ghost_name }}</h5>
-                    <p class="card-text">{{ name.ghost_description }}</p>
-                    <button type="button" class="btn btn-secondary" id="name-{{ loop.index }}" data-ghost-name="{{ name.ghost_name }}">
-                      {{ name.ghost_name }}
-                    </button>
-                  </div>
+                  <button type="button" class="btn btn-secondary" id="name-{{ loop.index }}" data-ghost-name="{{ name }}">
+                    {{ first_name if first_name is not none else '' }} "{{ name }}" {{ last_name if last_name is not none else '' }}
+                  </button>
                 </div>
               {% endfor %}
             </div>
@@ -31,11 +27,19 @@
             <hr />
 
             <div class="mb-3">
-              <input type="text" class="form-control" id="firstNameInput" name="first_name" placeholder="First Name">
+              {% if first_name %}
+                <input type="text" class="form-control" id="firstNameInput" name="first_name" placeholder="First Name" value="{{ first_name }}">
+              {% else %}
+                <input type="text" class="form-control" id="firstNameInput" name="first_name" placeholder="First Name">
+              {% endif %}
             </div>
 
             <div class="mb-3">
-              <input type="text" class="form-control" id="lastNameInput" name="last_name" placeholder="Last Name">
+              {% if first_name %}
+                <input type="text" class="form-control" id="lastNameInput" name="last_name" placeholder="Last Name" value="{{ last_name }}">
+              {% else %}
+                <input type="text" class="form-control" id="lastNameInput" name="last_name" placeholder="Last Name">
+              {% endif %}
             </div>
 
             <input type="hidden" id="ghostNameInput" name="ghost_name" value="">

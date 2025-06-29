@@ -4,6 +4,7 @@ from flask.sessions import SessionMixin
 from google.cloud import secretmanager
 from typing import List
 import csv
+import random
 
 from app.models import PhantomData
 
@@ -66,13 +67,36 @@ def get_session_user(session: SessionMixin) -> dict:
     user = session.get("user") if session else None
     return user if isinstance(user, dict) else {}
 
+
 def load_ghost_names() -> List[PhantomData]:
+    """Loads the ghost names from a csv file.
+    The path should probably be an environment variable.
+
+    Returns:
+        List[PhantomData]: Returns a list of PhantomData dataclass-constructed objects.
+    """
     data:List[PhantomData] = []
     with open("./data/ghost_names.csv", 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            # parse out the name and description
             ghost_name = row['Ghost name']
             ghost_description = row['Description']
-            data.append(PhantomData(ghost_name=ghost_name, ghost_description=ghost_description))
+            
+            data.append(PhantomData(
+                ghost_name = ghost_name,
+                ghost_description = ghost_description
+            ))
     return data
+
+
+def pick_random_string(list_of_strings: list[str], exclusions: list[str], count: int = 3):
+    # remove excluded items from the list
+    filtered_list = [s for s in list_of_strings if s not in exclusions]
     
+    # return the list if there isn't enough strings
+    if len(filtered_list) < count:
+        return filtered_list
+    
+    # pick random strings from the filtered list
+    return random.sample(filtered_list, count)

@@ -5,6 +5,7 @@ from flask import session, url_for, redirect
 
 from authlib.integrations.flask_client import OAuth
 from authlib.integrations.flask_client.apps import FlaskOAuth2App
+
 from google.cloud import ndb
 from google.cloud.ndb import Client
 
@@ -53,21 +54,27 @@ def create_auth_blueprint(oauth: FlaskOAuth2App, ndb_client: Client) -> Blueprin
     def callback():
         # Retrieve the nonce from the session
         nonce = session.get('nonce')
+        
+        # authorise and parse access token
         token = oauth.authorize_access_token()
         user = oauth.parse_id_token(token, nonce=nonce)
         if user:
             session['user'] = user
+            
+            # create user - actually creates only if non-existant
             create_user_entry(
                 ndb_client=ndb_client, 
                 user_id=str(user.get('sub')),
                 email=str(user.get('email'))
             )
         else:
+            # clear the session if there was an error in the callback
             session.clear()
         return redirect(url_for('root'))
 
     @auth_blueprint.route('/logout')
     def logout():
+        # remove session data and redirect to /
         session.pop('user', None)
         session.pop('nonce', None)
         return redirect(url_for('root'))
@@ -75,12 +82,26 @@ def create_auth_blueprint(oauth: FlaskOAuth2App, ndb_client: Client) -> Blueprin
     return auth_blueprint
 
 def create_user_entry(ndb_client: Client, user_id: str, email: str) -> GhostUser:
+    """Returns a GhostUser based on the user_id. Email gets updated on existing users
+
+    Args:
+        ndb_client (Client): The NDB client.
+        user_id (str): The user_id (sub) of the user.
+        email (str): The email of the user.
+
+    Raises:
+        Exception: Raised if user_id or email isn't specified. This should probably be more granular.
+
+    Returns:
+        GhostUser: The GhostUser object - created new if user doesn't exist, returns from db if user does exist.
+    """
     if not user_id:
         raise Exception("No user id specified!")
     if not email:
         raise Exception("No email specified!")
     
     with ndb_client.context():
+        # create a key based on user_id
         key = ndb.Key(GhostUser, user_id)
 
         # Check if a user with this user_id already exists

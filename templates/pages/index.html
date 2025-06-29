@@ -21,7 +21,7 @@
             <tbody>
               {% for ghost in ghost_users %}
                 <tr>
-                  <th scope="row">{{ ghost.ghost_name }}</th>
+                  <th scope="row">{{ ghost.first_name }} "{{ ghost.ghost_name }}" {{ ghost.last_name }}</th>
                   <th scope="row">{{ ghost.email }}</th>
                 </tr>
               {% endfor %}
