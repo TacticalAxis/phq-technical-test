@@ -4,7 +4,7 @@ import securescaffold
 
 from flask import render_template, send_from_directory, session
 from authlib.integrations.flask_client import OAuth
-
+from google.cloud import ndb
 from app.auth import create_auth_blueprint, register_google_oauth
 
 # flask app setup
@@ -13,6 +13,9 @@ app = securescaffold.create_app(__name__)
 # init oauth
 oauth = OAuth(app)
 google_oauth = register_google_oauth(oauth)
+
+# init ndb client
+ndb_client = ndb.Client()
 
 # create auth blueprint from factory
 auth_bp = create_auth_blueprint(google_oauth)
