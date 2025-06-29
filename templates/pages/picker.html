@@ -17,8 +17,8 @@
             <div class="btn-group flex-wrap" role="group" aria-label="Basic example">
               {% for name in random_names %}
                 <div class="card mb-3">
-                  <button type="button" class="btn btn-secondary" id="name-{{ loop.index }}" data-ghost-name="{{ name.ghost_name }}">
-                    {{ first_name if first_name is not none else '' }} "{{ name.ghost_name }}" {{ last_name if last_name is not none else '' }}
+                  <button type="button" class="btn btn-secondary" id="name-{{ loop.index }}" data-ghost-name="{{ name }}">
+                    {{ first_name if first_name is not none else '' }} "{{ name }}" {{ last_name if last_name is not none else '' }}
                   </button>
                 </div>
               {% endfor %}

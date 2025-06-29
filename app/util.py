@@ -4,6 +4,7 @@ from flask.sessions import SessionMixin
 from google.cloud import secretmanager
 from typing import List
 import csv
+import random
 
 from app.models import PhantomData
 
@@ -66,6 +67,7 @@ def get_session_user(session: SessionMixin) -> dict:
     user = session.get("user") if session else None
     return user if isinstance(user, dict) else {}
 
+
 def load_ghost_names() -> List[PhantomData]:
     data:List[PhantomData] = []
     with open("./data/ghost_names.csv", 'r') as f:
@@ -75,4 +77,16 @@ def load_ghost_names() -> List[PhantomData]:
             ghost_description = row['Description']
             data.append(PhantomData(ghost_name=ghost_name, ghost_description=ghost_description))
     return data
+
+
+def pick_random_string(list_of_strings: list[str], exclusions: list[str], count: int = 3):
+    # Remove excluded items from the list
+    print("LOS", list_of_strings)
+    filtered_list = [s for s in list_of_strings if s not in exclusions]
+    print("fs", list_of_strings)
     
+    if len(filtered_list) < count:
+        raise ValueError("Not enough items to sample after exclusions.")
+    
+    # Pick random strings from the filtered list
+    return random.sample(filtered_list, count)
